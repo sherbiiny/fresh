@@ -1,26 +1,20 @@
-import type { Admin, User } from '@/types';
+import type { User } from '@supabase/supabase-js';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 
 type AuthStorage = {
   user: User | null;
-  admin: Admin | null;
-  loginUser: (user: User) => void;
-  loginAdmin: (admin: Admin) => void;
-  logoutAdmin: () => void;
-  logoutUser: () => void;
+  admin: User | null;
+  setUser: (user: User) => void;
+  setAdmin: (admin: User) => void;
+  clearUser: () => void;
+  clearAdmin: () => void;
 };
 
-export const useAuthStore = create<AuthStorage>()(
-  persist(
-    set => ({
-      user: null,
-      admin: null,
-      loginUser: (user: User) => set({ user }),
-      loginAdmin: (admin: Admin) => set({ admin }),
-      logoutAdmin: () => set({ user: null }),
-      logoutUser: () => set({ admin: null }),
-    }),
-    { name: 'auth-storage' }
-  )
-);
+export const useAuthStore = create<AuthStorage>()(set => ({
+  user: null,
+  admin: null,
+  setUser: (user: User) => set({ user }),
+  setAdmin: (admin: User) => set({ admin }),
+  clearUser: () => set({ user: null }),
+  clearAdmin: () => set({ admin: null }),
+}));

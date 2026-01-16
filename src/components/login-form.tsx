@@ -3,9 +3,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { Spinner } from './ui/spinner';
 
 type LoginFormProps = React.ComponentProps<'div'> & {
-  onSubmit: () => void;
+  onSubmit: (e: React.FormEvent) => void;
   username: string;
   password: string;
   isLoading: boolean;
@@ -37,7 +38,7 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={onSubmit}>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="username">Username</FieldLabel>
@@ -63,11 +64,8 @@ export function LoginForm({
                 />
               </Field>
               <Field>
-                <Button onClick={onSubmit} disabled={isLoading}>
-                  {isLoading ? 'Logging in...' : 'Login'}
-                </Button>
-                <Button variant="outline" type="button">
-                  Login with Google
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading ? <Spinner /> : 'Login'}
                 </Button>
                 <FieldDescription className="text-center">
                   Don&apos;t have an account? <a href="#">Sign up</a>
