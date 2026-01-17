@@ -16,7 +16,7 @@ const App = () => (
     <ThemeProvider>
       <SidebarProvider>
         <RouterProvider router={router} />
-        <Toaster position="top-right" />
+        <Toaster />
       </SidebarProvider>
     </ThemeProvider>
   </QueryClientProvider>

@@ -16,21 +16,53 @@ export const Route = createFileRoute('/admin/products')({ component: RouteCompon
 
 const columns: ColumnDef<Product>[] = [
   {
+    header: 'Image',
+    accessorKey: 'image',
+    cell: ({ row }) => {
+      const image = row.getValue('image') || '/appicon.png';
+
+      return (
+        <div className="w-10 h-10 overflow-hidden">
+          <img src={image as string} alt={row.getValue('title') as string} className="w-full h-full object-cover" />
+        </div>
+      );
+    },
+  },
+  {
     header: 'Title',
     accessorKey: 'title',
+    cell: ({ row }) => (
+      <div className="font-medium max-w-[200px] truncate" title={row.getValue('title')}>
+        {row.getValue('title')}
+      </div>
+    ),
   },
   {
     header: 'Description',
     accessorKey: 'description',
+    cell: ({ row }) => {
+      const description = row.getValue('description') as string;
+      return (
+        <div className="max-w-[300px] truncate text-muted-foreground" title={description}>
+          {description}
+        </div>
+      );
+    },
   },
   {
     header: 'Price',
     accessorKey: 'price',
+    cell: ({ row }) => {
+      const price = typeof row.getValue('price') === 'number' 
+        ? row.getValue('price') as number
+        : parseFloat(row.getValue('price') as string);
+      return <div className="font-semibold">${price.toFixed(2)}</div>;
+    },
   },
 ]
 
 function RouteComponent() {
-  const { data: products } = useQuery(getProductsQuery());
+  const { data: products, isLoading } = useQuery(getProductsQuery());
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -42,7 +74,7 @@ function RouteComponent() {
           Add Product
         </Button>
       </div>
-      <DataTable columns={columns} data={products ?? []} />
+      <DataTable columns={columns} data={products ?? []} isLoading={isLoading} />
       <AddProductModal
         open={isModalOpen}
         onOpenChange={setIsModalOpen}

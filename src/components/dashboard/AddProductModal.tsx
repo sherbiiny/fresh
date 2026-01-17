@@ -34,7 +34,7 @@ export function AddProductModal({ open, onOpenChange }: AddProductModalProps) {
       description: "",
       price: 0,
       quantity: 0,
-      image: "",
+      image: '',
     },
   });
 
@@ -102,16 +102,28 @@ export function AddProductModal({ open, onOpenChange }: AddProductModalProps) {
                   Price <span className="text-destructive">*</span>
                 </FieldLabel>
                 <FieldContent>
-                  <Controller
-                    control={form.control}
-                    name="price"
-                    render={({ field, fieldState }) => (
-                      <>
-                        <Input id="price" {...field} type="number" step="1" min="0" placeholder="00" required />
-                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                      </>
-                    )}
-                  />
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                    <Controller
+                      control={form.control}
+                      name="price"
+                      render={({ field, fieldState }) => (
+                        <>
+                          <Input 
+                            id="price" 
+                            {...field} 
+                            type="number" 
+                            step="0.01" 
+                            min="0" 
+                            placeholder="0.00" 
+                            className="pl-7"
+                            required 
+                          />
+                          {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                        </>
+                      )}
+                    />
+                  </div>
                 </FieldContent>
               </Field>
 
@@ -142,7 +154,7 @@ export function AddProductModal({ open, onOpenChange }: AddProductModalProps) {
                   name="image"
                   render={({ field, fieldState }) => (
                     <>
-                      <Input id="image" {...field} type="url" placeholder="https://example.com/image.jpg" required />
+                      <Input id="image" {...field} type="url" placeholder="https://example.com/image.jpg" />
                       {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                     </>
                   )}
