@@ -1,11 +1,12 @@
 import { useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
 import { createFileRoute, Link, redirect, useNavigate } from '@tanstack/react-router';
 import { Eye, EyeOff } from 'lucide-react';
 import { Controller, useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 
+import { loginAdminMutation } from '@/api/mutations';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { FieldGroup , Field, FieldLabel, FieldError } from '@/components/ui/field';
@@ -24,46 +25,27 @@ export const Route = createFileRoute('/admin/login')({
   component: RouteComponent,
 });
 
-// this component might be a huge overkill for this simple login page.
 function RouteComponent() {
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: '', password: '' }
   });
 
-  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const { setAdmin } = useAuthStore();
   const navigate = useNavigate();
 
-  // TODO: maybe use react-query mutation here
-  const onSubmit = async (formData: LoginSchema) => {
-    try {
-      setIsLoading(true);
-      const { error, data } = await adminSupabaseClient.auth.signInWithPassword({
-        email: formData.email,
-        password: formData.password,
-      });
-
-      if (error) throw error;
-      if (data.user?.app_metadata?.role !== 'admin') {
-        await adminSupabaseClient.auth.signOut();
-        throw new Error('Invalid credentials');
-      }
-
-      setAdmin(data.user);
+  const { mutate: loginAdmin, isPending } = useMutation({
+    ...loginAdminMutation(),
+    onSuccess: (user) => {
+      setAdmin(user);
       navigate({ to: '/admin' });
-    } catch (err) {
-      console.error(err);
-      toast.error((err as Error).message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    },
+  });
 
   return (
-    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+    <div className="flex h-full w-full items-center justify-center p-6">
       <div className="w-full max-w-sm">
         <Card className="shadow-lg">
           <CardHeader className="pb-4">
@@ -73,7 +55,7 @@ function RouteComponent() {
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-2">
-            <form onSubmit={form.handleSubmit(onSubmit)}>
+            <form onSubmit={form.handleSubmit(data => loginAdmin(data))} aria-disabled={isPending}>
               <FieldGroup>
                 <Controller
                   control={form.control}
@@ -121,8 +103,8 @@ function RouteComponent() {
                   )}
                 />
                 <Field>
-                  <Button type="submit" disabled={isLoading} className="w-full">
-                    {isLoading ? <Spinner /> : 'Login'}
+                  <Button type="submit" disabled={isPending} className="w-full">
+                    {isPending ? <Spinner /> : 'Login'}
                   </Button>
                 </Field>
               </FieldGroup>
