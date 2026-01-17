@@ -1,9 +1,20 @@
+
+import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/admin/users')({
-  component: RouteComponent,
-})
+import { getCustomersQuery } from '@/api/queries';
+
+export const Route = createFileRoute('/admin/users')({ component: RouteComponent })
 
 function RouteComponent() {
-  return <div>Hello "/admin/users"!</div>
+  const { data: customers } = useQuery(getCustomersQuery());
+
+  return <div>
+    {customers?.map((customer) => (
+      <div key={customer.id}>
+        <h1>{customer.name}</h1>
+        <p>{customer.email}</p>
+      </div>
+    ))}
+  </div>
 }
