@@ -1,19 +1,22 @@
 import { useEffect, useState } from 'react';
 
-import { createFileRoute, Outlet } from '@tanstack/react-router';
+import { createFileRoute, Outlet, useLocation } from '@tanstack/react-router';
 
+import { DashboardSidebar } from '@/components/dashboard/DashboardSidebar';
+import { NotFound } from '@/components/NotFound';
 import { LoadingOverlay } from '@/components/ui/loading-overlay';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 import { adminSupabaseClient } from '@/lib/supabase';
 import { useAuthStore } from '@/storage/auth';
 
-export const Route = createFileRoute('/admin')({ component: RouteComponent });
+export const Route = createFileRoute('/admin')({ component: RouteComponent, notFoundComponent: () => <NotFound basePath={'/admin'} /> });
 
 function RouteComponent() {
-  const [ready, setReady] = useState(false);
+  const isLoginPage = useLocation().pathname.includes('/login');
 
+  const [ready, setReady] = useState(false);
   const { setAdmin } = useAuthStore();
 
-  
   useEffect(() => {
     const checkSession = async () => {
       const { data } = await adminSupabaseClient.auth.getSession();
@@ -24,5 +27,13 @@ function RouteComponent() {
     checkSession();
   }, [setAdmin]);
 
-  return <div>{ready ? <Outlet /> : <LoadingOverlay />}</div>;
+  return (
+    <div className="flex min-h-svh w-full">
+      {!isLoginPage && <DashboardSidebar />}
+      {!isLoginPage && <SidebarTrigger />}
+      <main className="flex-1 p-8">
+        {ready ? <Outlet /> : <LoadingOverlay />}
+      </main>
+    </div>
+  );
 }
