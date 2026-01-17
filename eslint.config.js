@@ -24,7 +24,6 @@ export default defineConfig([
       globals: globals.browser,
     },
     rules: {
-      'react-refresh/only-export-components': false,
       'import/order': [
         'error',
         {
@@ -59,6 +58,7 @@ export default defineConfig([
       ],
       'import/no-duplicates': 'error',
       'import/no-unused-modules': 'off', // Can be slow, disable by default
+      'react-refresh/only-export-components': 'off',
     },
     settings: {
       'import/resolver': {

@@ -1,12 +1,13 @@
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
+
 import { Button } from '@/components/ui/button';
 import { adminSupabaseClient } from '@/lib/supabase';
 import { useAuthStore } from '@/storage/auth';
-import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/admin/')({
   beforeLoad: async () => {
     const { data } = await adminSupabaseClient.auth.getSession();
-    if (!data.session) return redirect({ to: '/admin/login' });
+    if (!data.session || data.session.user.app_metadata.role !== 'admin') return redirect({ to: '/admin/login' });
   },
   component: RouteComponent,
 });

@@ -1,15 +1,16 @@
 import { createRouter, RouterProvider } from '@tanstack/react-router';
 
-import { routeTree } from './routeTree.gen';
+import { Toaster } from '@/components/ui/sonner';
+
 import { ThemeProvider } from './components/theme-provider';
-import { Toaster } from 'sonner';
+import { routeTree } from './routeTree.gen';
 
 const router = createRouter({ routeTree });
 
 const App = () => (
   <ThemeProvider>
     <RouterProvider router={router} />
-    <Toaster />
+    <Toaster position="top-right" />
   </ThemeProvider>
 );
 
