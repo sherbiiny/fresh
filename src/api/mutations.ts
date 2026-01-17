@@ -1,10 +1,10 @@
-import { mutationOptions } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { mutationOptions } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
-import { adminSupabaseClient } from "@/lib/supabase";
+import { adminSupabaseClient } from '@/lib/supabase';
 
-import type { LoginSchema } from "@/schemas/auth";
-import type { AddProductSchema } from "@/schemas/products";
+import type { LoginSchema } from '@/schemas/auth';
+import type { AddProductSchema } from '@/schemas/products';
 
 export const loginAdminMutation = () => {
   return mutationOptions({
@@ -19,13 +19,13 @@ export const loginAdminMutation = () => {
 
       return data.user;
     },
-    
+
     onError: (error: Error) => {
       toast.error(error.message);
       console.error(error);
-    }
+    },
   });
-}
+};
 
 export const addProductMutation = () => {
   return mutationOptions({
@@ -34,10 +34,10 @@ export const addProductMutation = () => {
       if (error) throw error;
       return data;
     },
-    
+
     onError: (error: Error) => {
       toast.error(error.message);
       console.error(error);
-    }
+    },
   });
-}
+};

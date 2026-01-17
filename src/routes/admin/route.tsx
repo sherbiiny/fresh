@@ -9,7 +9,10 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import { adminSupabaseClient } from '@/lib/supabase';
 import { useAuthStore } from '@/storage/auth';
 
-export const Route = createFileRoute('/admin')({ component: RouteComponent, notFoundComponent: () => <NotFound basePath={'/admin'} /> });
+export const Route = createFileRoute('/admin')({
+  component: RouteComponent,
+  notFoundComponent: () => <NotFound basePath={'/admin'} />,
+});
 
 function RouteComponent() {
   const isLoginPage = useLocation().pathname.includes('/login');
@@ -31,9 +34,7 @@ function RouteComponent() {
     <div className="flex min-h-svh w-full">
       {!isLoginPage && <DashboardSidebar />}
       {!isLoginPage && <SidebarTrigger />}
-      <main className="flex-1 p-8">
-        {ready ? <Outlet /> : <LoadingOverlay />}
-      </main>
+      <main className="flex-1 p-8">{ready ? <Outlet /> : <LoadingOverlay />}</main>
     </div>
   );
 }

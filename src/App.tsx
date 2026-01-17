@@ -8,7 +8,6 @@ import { ThemeProvider } from './components/theme-provider';
 import { SidebarProvider } from './components/ui/sidebar';
 import { routeTree } from './routeTree.gen';
 
-
 const router = createRouter({ routeTree });
 
 const App = () => (

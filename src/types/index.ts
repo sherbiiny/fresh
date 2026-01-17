@@ -4,7 +4,7 @@ export type Customer = {
   email: string;
   avatar: string | null;
   createdAt: string;
-}
+};
 
 export type Product = {
   id: string;
@@ -14,4 +14,4 @@ export type Product = {
   quantity: number;
   image: string | null;
   createdAt: string;
-}
+};

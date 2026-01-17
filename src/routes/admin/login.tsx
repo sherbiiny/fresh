@@ -8,8 +8,15 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { loginAdminMutation } from '@/api/mutations';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { FieldGroup , Field, FieldLabel, FieldError } from '@/components/ui/field';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { FieldGroup, Field, FieldLabel, FieldError } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 import { adminSupabaseClient } from '@/lib/supabase';
@@ -19,7 +26,8 @@ import { useAuthStore } from '@/storage/auth';
 export const Route = createFileRoute('/admin/login')({
   beforeLoad: async () => {
     const { data } = await adminSupabaseClient.auth.getSession();
-    if (data.session && data.session.user.app_metadata.role === 'admin') return redirect({ to: '/admin' });
+    if (data.session && data.session.user.app_metadata.role === 'admin')
+      return redirect({ to: '/admin' });
     await adminSupabaseClient.auth.signOut();
   },
   component: RouteComponent,
@@ -28,7 +36,7 @@ export const Route = createFileRoute('/admin/login')({
 function RouteComponent() {
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: '', password: '' }
+    defaultValues: { email: '', password: '' },
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -38,7 +46,7 @@ function RouteComponent() {
 
   const { mutate: loginAdmin, isPending } = useMutation({
     ...loginAdminMutation(),
-    onSuccess: (user) => {
+    onSuccess: user => {
       setAdmin(user);
       navigate({ to: '/admin' });
     },
@@ -50,9 +58,7 @@ function RouteComponent() {
         <Card className="shadow-lg">
           <CardHeader className="pb-4">
             <CardTitle className="text-2xl">Login to your account</CardTitle>
-            <CardDescription>
-              Enter your email and password
-            </CardDescription>
+            <CardDescription>Enter your email and password</CardDescription>
           </CardHeader>
           <CardContent className="pt-2">
             <form onSubmit={form.handleSubmit(data => loginAdmin(data))} aria-disabled={isPending}>
@@ -63,7 +69,13 @@ function RouteComponent() {
                   render={({ field, fieldState }) => (
                     <Field>
                       <FieldLabel htmlFor="email">Email</FieldLabel>
-                      <Input id="email" {...field} aria-invalid={fieldState.invalid} type="email" placeholder="Email" />
+                      <Input
+                        id="email"
+                        {...field}
+                        aria-invalid={fieldState.invalid}
+                        type="email"
+                        placeholder="Email"
+                      />
                       {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                     </Field>
                   )}
@@ -113,10 +125,7 @@ function RouteComponent() {
           <CardFooter className="flex flex-col gap-2 border-t pt-4">
             <div className="text-center text-sm text-muted-foreground">
               Don't have an account?{' '}
-              <Link
-                to="/admin/register"
-                className="text-primary font-medium hover:underline"
-              >
+              <Link to="/admin/register" className="text-primary font-medium hover:underline">
                 Register
               </Link>
             </div>

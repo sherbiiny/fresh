@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import {
   type ColumnDef,
@@ -6,7 +6,7 @@ import {
   getCoreRowModel,
   useReactTable,
   getPaginationRowModel,
-} from "@tanstack/react-table"
+} from '@tanstack/react-table';
 
 import {
   Table,
@@ -15,16 +15,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from '@/components/ui/table';
 
-import { Button } from "../ui/button"
-import { Spinner } from "../ui/spinner"
-
+import { Button } from '../ui/button';
+import { Spinner } from '../ui/spinner';
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[],
-  isLoading: boolean,
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+  isLoading: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -37,46 +36,43 @@ export function DataTable<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-  })
+  });
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-4">
         <Spinner className="size-10" />
       </div>
-    )
+    );
   }
 
   return (
     <div className="overflow-hidden rounded-lg border bg-card p-2">
       <Table>
         <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
+          {table.getHeaderGroups().map(headerGroup => (
             <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
+              {headerGroup.headers.map(header => {
                 return (
                   <TableHead key={header.id} className="h-12">
                     {header.isPlaceholder
                       ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                      : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
-                )
+                );
               })}
             </TableRow>
           ))}
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
+            table.getRowModel().rows.map(row => (
               <TableRow
                 key={row.id}
-                data-state={row.getIsSelected() && "selected"}
+                data-state={row.getIsSelected() && 'selected'}
                 className="hover:bg-muted/50"
               >
-                {row.getVisibleCells().map((cell) => (
+                {row.getVisibleCells().map(cell => (
                   <TableCell key={cell.id} className="py-3">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
@@ -85,7 +81,10 @@ export function DataTable<TData, TValue>({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-32 text-center text-muted-foreground">
+              <TableCell
+                colSpan={columns.length}
+                className="h-32 text-center text-muted-foreground"
+              >
                 <div className="flex flex-col items-center justify-center gap-2">
                   <p className="text-sm font-medium">No results found</p>
                   <p className="text-xs">Try adjusting your search or filters</p>
@@ -128,5 +127,5 @@ export function DataTable<TData, TValue>({
         </div>
       )}
     </div>
-  )
+  );
 }

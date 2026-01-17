@@ -1,8 +1,8 @@
-import { useState } from "react"
+import { useState } from 'react';
 
-import { Link, useNavigate } from "@tanstack/react-router"
-import { LayoutDashboard, LeafIcon, LogOutIcon, PackageIcon, UsersIcon } from "lucide-react"
-import { toast } from "sonner"
+import { Link, useNavigate } from '@tanstack/react-router';
+import { LayoutDashboard, LeafIcon, LogOutIcon, PackageIcon, UsersIcon } from 'lucide-react';
+import { toast } from 'sonner';
 
 import {
   Sidebar,
@@ -13,12 +13,12 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import { adminSupabaseClient } from "@/lib/supabase"
-import { useAuthStore } from "@/storage/auth"
+} from '@/components/ui/sidebar';
+import { adminSupabaseClient } from '@/lib/supabase';
+import { useAuthStore } from '@/storage/auth';
 
-import { Button } from "../ui/button"
-import { Spinner } from "../ui/spinner"
+import { Button } from '../ui/button';
+import { Spinner } from '../ui/spinner';
 
 const sidebarItems = [
   {
@@ -31,7 +31,7 @@ const sidebarItems = [
     label: 'Products',
     href: '/admin/products',
   },
-    {
+  {
     icon: UsersIcon,
     label: 'Users',
     href: '/admin/users',
@@ -41,7 +41,7 @@ const sidebarItems = [
     label: 'Orders',
     href: '/admin/orders',
   },
-]
+];
 
 export function DashboardSidebar() {
   const navigate = useNavigate();
@@ -71,7 +71,7 @@ export function DashboardSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
-            {sidebarItems.map((item) => (
+            {sidebarItems.map(item => (
               <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton asChild>
                   <Link to={item.href}>
@@ -94,5 +94,5 @@ export function DashboardSidebar() {
         </SidebarMenuButton>
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }

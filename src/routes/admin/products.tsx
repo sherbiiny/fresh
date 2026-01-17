@@ -1,8 +1,16 @@
 import { useState } from 'react';
 
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from '@radix-ui/react-dropdown-menu';
 import { useQuery } from '@tanstack/react-query';
-import { createFileRoute } from '@tanstack/react-router'
-import { Plus } from 'lucide-react'
+import { createFileRoute } from '@tanstack/react-router';
+import { MoreHorizontal, Plus } from 'lucide-react';
 
 import { getProductsQuery } from '@/api/queries';
 import { AddProductModal } from '@/components/dashboard/AddProductModal';
@@ -12,7 +20,7 @@ import { Button } from '@/components/ui/button';
 import type { Product } from '@/types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export const Route = createFileRoute('/admin/products')({ component: RouteComponent })
+export const Route = createFileRoute('/admin/products')({ component: RouteComponent });
 
 const columns: ColumnDef<Product>[] = [
   {
@@ -23,7 +31,11 @@ const columns: ColumnDef<Product>[] = [
 
       return (
         <div className="w-10 h-10 overflow-hidden">
-          <img src={image as string} alt={row.getValue('title') as string} className="w-full h-full object-cover" />
+          <img
+            src={image as string}
+            alt={row.getValue('title') as string}
+            className="w-full h-full object-cover"
+          />
         </div>
       );
     },
@@ -53,13 +65,40 @@ const columns: ColumnDef<Product>[] = [
     header: 'Price',
     accessorKey: 'price',
     cell: ({ row }) => {
-      const price = typeof row.getValue('price') === 'number' 
-        ? row.getValue('price') as number
-        : parseFloat(row.getValue('price') as string);
+      const price =
+        typeof row.getValue('price') === 'number'
+          ? (row.getValue('price') as number)
+          : parseFloat(row.getValue('price') as string);
       return <div className="font-semibold">${price.toFixed(2)}</div>;
     },
   },
-]
+  {
+    id: 'actions',
+    cell: ({ row }) => {
+      const product = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(product.id)}>
+              Copy product ID
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>View customer</DropdownMenuItem>
+            <DropdownMenuItem>View payment details</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+];
 
 function RouteComponent() {
   const { data: products, isLoading } = useQuery(getProductsQuery());
@@ -75,10 +114,7 @@ function RouteComponent() {
         </Button>
       </div>
       <DataTable columns={columns} data={products ?? []} isLoading={isLoading} />
-      <AddProductModal
-        open={isModalOpen}
-        onOpenChange={setIsModalOpen}
-      />
+      <AddProductModal open={isModalOpen} onOpenChange={setIsModalOpen} />
     </div>
-  )
+  );
 }

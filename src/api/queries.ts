@@ -1,8 +1,8 @@
-import { queryOptions } from "@tanstack/react-query";
+import { queryOptions } from '@tanstack/react-query';
 
-import { adminSupabaseClient } from "@/lib/supabase";
+import { adminSupabaseClient } from '@/lib/supabase';
 
-import type { Customer, Product } from "@/types";
+import type { Customer, Product } from '@/types';
 
 // TODO: Add pagination
 export const getCustomersQuery = () => {
@@ -14,7 +14,7 @@ export const getCustomersQuery = () => {
       return data;
     },
   });
-}
+};
 
 export const getProductsQuery = () => {
   return queryOptions<Product[]>({
@@ -25,4 +25,4 @@ export const getProductsQuery = () => {
       return data;
     },
   });
-}
+};

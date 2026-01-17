@@ -1,11 +1,11 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { Controller, useForm } from "react-hook-form";
-import { toast } from "sonner";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
+import { Controller, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
-import { addProductMutation } from "@/api/mutations";
-import { queryClient } from "@/api/queryClient";
-import { Button } from "@/components/ui/button";
+import { addProductMutation } from '@/api/mutations';
+import { queryClient } from '@/api/queryClient';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -13,25 +13,25 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Field, FieldContent, FieldError, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/dialog';
+import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
 import { addProductSchema, type AddProductSchema } from '@/schemas/products';
 
-import { Spinner } from "../ui/spinner";
-import { Textarea } from "../ui/textarea";
+import { Spinner } from '../ui/spinner';
+import { Textarea } from '../ui/textarea';
 
 type AddProductModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-}
+};
 
 export function AddProductModal({ open, onOpenChange }: AddProductModalProps) {
   const form = useForm<AddProductSchema>({
     resolver: zodResolver(addProductSchema),
     defaultValues: {
-      title: "",
-      description: "",
+      title: '',
+      description: '',
       price: 0,
       quantity: 0,
       image: '',
@@ -42,7 +42,7 @@ export function AddProductModal({ open, onOpenChange }: AddProductModalProps) {
     ...addProductMutation(),
     onSuccess: () => {
       toast.success('Product created successfully');
-      queryClient.invalidateQueries({ queryKey: ['products'] })
+      queryClient.invalidateQueries({ queryKey: ['products'] });
       onOpenChange(false);
       form.reset();
     },
@@ -88,7 +88,13 @@ export function AddProductModal({ open, onOpenChange }: AddProductModalProps) {
                   name="description"
                   render={({ field, fieldState }) => (
                     <>
-                      <Textarea id="description" {...field} placeholder="Enter product description" required rows={6} />
+                      <Textarea
+                        id="description"
+                        {...field}
+                        placeholder="Enter product description"
+                        required
+                        rows={6}
+                      />
                       {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                     </>
                   )}
@@ -103,21 +109,23 @@ export function AddProductModal({ open, onOpenChange }: AddProductModalProps) {
                 </FieldLabel>
                 <FieldContent>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                      $
+                    </span>
                     <Controller
                       control={form.control}
                       name="price"
                       render={({ field, fieldState }) => (
                         <>
-                          <Input 
-                            id="price" 
-                            {...field} 
-                            type="number" 
-                            step="0.01" 
-                            min="0" 
-                            placeholder="0.00" 
+                          <Input
+                            id="price"
+                            {...field}
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            placeholder="0.00"
                             className="pl-7"
-                            required 
+                            required
                           />
                           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                         </>
@@ -137,7 +145,14 @@ export function AddProductModal({ open, onOpenChange }: AddProductModalProps) {
                     name="quantity"
                     render={({ field, fieldState }) => (
                       <>
-                        <Input id="quantity" {...field} type="number" min="0" placeholder="0" required />
+                        <Input
+                          id="quantity"
+                          {...field}
+                          type="number"
+                          min="0"
+                          placeholder="0"
+                          required
+                        />
                         {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                       </>
                     )}
@@ -154,7 +169,12 @@ export function AddProductModal({ open, onOpenChange }: AddProductModalProps) {
                   name="image"
                   render={({ field, fieldState }) => (
                     <>
-                      <Input id="image" {...field} type="url" placeholder="https://example.com/image.jpg" />
+                      <Input
+                        id="image"
+                        {...field}
+                        type="url"
+                        placeholder="https://example.com/image.jpg"
+                      />
                       {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                     </>
                   )}
@@ -164,11 +184,7 @@ export function AddProductModal({ open, onOpenChange }: AddProductModalProps) {
           </div>
 
           <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-            >
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
             <Button type="submit" disabled={isPending}>
