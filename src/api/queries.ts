@@ -4,7 +4,7 @@ import { adminSupabaseClient } from '@/lib/supabase';
 
 import type { CustomerFilterSchema } from '@/schemas/customers';
 import type { ProductFilterSchema } from '@/schemas/products';
-import type { Customer, Product } from '@/types';
+import type { Customer, Product, DashboardStats } from '@/types';
 
 // TODO: Add pagination
 export const getCustomersQuery = (filterQuery: CustomerFilterSchema) => {
@@ -33,6 +33,17 @@ export const getProductsQuery = (filterQuery: ProductFilterSchema) => {
 
       if (error) throw error;
       return data;
+    },
+  });
+};
+
+export const getDashboardStatsQuery = () => {
+  return queryOptions<DashboardStats>({
+    queryKey: ['dashboard-stats'],
+    queryFn: async () => {
+      const { data, error } = await adminSupabaseClient.rpc('get_dashboard_stats');
+      if (error) throw error;
+      return data as DashboardStats;
     },
   });
 };
