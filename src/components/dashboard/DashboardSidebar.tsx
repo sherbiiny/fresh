@@ -87,17 +87,10 @@ export function DashboardSidebar() {
           <SidebarMenu>
             {sidebarItems.map(item => (
               <SidebarMenuItem key={item.href}>
-                <SidebarMenuButton
-                  asChild
-                  isActive={isActive(item.href)}
-                  tooltip={item.label}
-                >
+                <SidebarMenuButton asChild isActive={isActive(item.href)} tooltip={item.label}>
                   <Link
                     to={item.href}
-                    className={cn(
-                      'gap-3',
-                      isActive(item.href) && 'font-medium'
-                    )}
+                    className={cn('gap-3', isActive(item.href) && 'font-medium')}
                   >
                     <item.icon className="h-4 w-4" />
                     <span>{item.label}</span>
@@ -116,11 +109,7 @@ export function DashboardSidebar() {
               disabled={isLoading}
               className="w-full gap-3 text-destructive hover:text-destructive hover:bg-destructive/10"
             >
-              {isLoading ? (
-                <Spinner className="h-4 w-4" />
-              ) : (
-                <LogOutIcon className="h-4 w-4" />
-              )}
+              {isLoading ? <Spinner className="h-4 w-4" /> : <LogOutIcon className="h-4 w-4" />}
               <span>Logout</span>
             </SidebarMenuButton>
           </SidebarMenuItem>

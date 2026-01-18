@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 
 import { adminSupabaseClient } from '@/lib/supabase';
 
-  import { queryClient } from './queryClient';
+import { queryClient } from './queryClient';
 
 import type { LoginSchema } from '@/schemas/auth';
 import type { AddProductSchema } from '@/schemas/products';
@@ -70,7 +70,10 @@ export const updateProductMutation = () => {
 export const deleteProductMutation = () => {
   return mutationOptions({
     mutationFn: async (productId: number) => {
-      const { data, error } = await adminSupabaseClient.from('products').delete().eq('id', productId);
+      const { data, error } = await adminSupabaseClient
+        .from('products')
+        .delete()
+        .eq('id', productId);
       if (error) throw error;
       return data;
     },

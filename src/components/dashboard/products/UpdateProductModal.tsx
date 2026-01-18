@@ -1,9 +1,11 @@
+import { useEffect } from 'react';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import { addProductMutation } from '@/api/mutations';
+import { updateProductMutation } from '@/api/mutations';
 import { queryClient } from '@/api/queryClient';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,17 +18,18 @@ import {
 } from '@/components/ui/dialog';
 import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { Spinner } from '@/components/ui/spinner';
+import { Textarea } from '@/components/ui/textarea';
 import { addProductSchema, type AddProductSchema } from '@/schemas/products';
 
-import { Spinner } from '../ui/spinner';
-import { Textarea } from '../ui/textarea';
+import type { Product } from '@/types';
 
-type AddProductModalProps = {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+type UpdateProductModalProps = {
+  setEditingProduct: (product: Product | null) => void;
+  editingProduct: Product | null;
 };
 
-export function AddProductModal({ open, onOpenChange }: AddProductModalProps) {
+export function UpdateProductModal({ setEditingProduct, editingProduct }: UpdateProductModalProps) {
   const form = useForm<AddProductSchema>({
     resolver: zodResolver(addProductSchema),
     defaultValues: {
@@ -38,27 +41,43 @@ export function AddProductModal({ open, onOpenChange }: AddProductModalProps) {
     },
   });
 
-  const { mutate: addProduct, isPending } = useMutation({
-    ...addProductMutation(),
+  useEffect(() => {
+    if (editingProduct) {
+      form.reset({
+        title: editingProduct.title,
+        description: editingProduct.description,
+        price: editingProduct.price,
+        quantity: editingProduct.quantity,
+        image: editingProduct.image || '',
+      });
+    }
+  }, [editingProduct, form]);
+
+  const { mutate: updateProduct, isPending } = useMutation({
+    ...updateProductMutation(),
     onSuccess: () => {
-      toast.success('Product created successfully');
+      toast.success('Product updated successfully');
       queryClient.invalidateQueries({ queryKey: ['products'] });
-      onOpenChange(false);
+      setEditingProduct(null);
       form.reset();
     },
   });
 
+  const handleSubmit = (data: AddProductSchema) => {
+    if (editingProduct) {
+      updateProduct({ id: editingProduct.id, ...data });
+    }
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={editingProduct !== null} onOpenChange={() => setEditingProduct(null)}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Add New Product</DialogTitle>
-          <DialogDescription>
-            Create a new product by filling in the details below.
-          </DialogDescription>
+          <DialogTitle>Update Product</DialogTitle>
+          <DialogDescription>Update the product details below.</DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={form.handleSubmit(data => addProduct(data))}>
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
           <div className="space-y-4 py-4">
             <Field>
               <FieldLabel htmlFor="title">
@@ -184,11 +203,11 @@ export function AddProductModal({ open, onOpenChange }: AddProductModalProps) {
           </div>
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <Button type="button" variant="outline" onClick={() => setEditingProduct(null)}>
               Cancel
             </Button>
             <Button type="submit" disabled={isPending}>
-              {isPending ? <Spinner /> : 'Create Product'}
+              {isPending ? <Spinner /> : 'Update Product'}
             </Button>
           </DialogFooter>
         </form>
