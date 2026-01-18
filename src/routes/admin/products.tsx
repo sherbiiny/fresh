@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 import { Plus, Search } from 'lucide-react';
 
 import { deleteProductMutation } from '@/api/dashboard/mutations';
@@ -18,11 +18,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { adminSupabaseClient } from '@/lib/supabase';
 import { productFilterSchema, type ProductFilterSchema } from '@/schemas/products';
 
 import type { Product } from '@/types';
 
 export const Route = createFileRoute('/admin/products')({
+  beforeLoad: async () => {
+    const { data } = await adminSupabaseClient.auth.getSession();
+    if (!data.session || data.session.user.app_metadata.role !== 'admin')
+      return redirect({ to: '/admin/login' });
+  },
   component: RouteComponent,
   validateSearch: productFilterSchema.parse,
 });

@@ -1,13 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 import { Search } from 'lucide-react';
 
 import { getCustomersQuery } from '@/api/dashboard/queries';
 import { CustomersTable } from '@/components/dashboard/customers/CustomersTable';
 import { Input } from '@/components/ui/input';
+import { adminSupabaseClient } from '@/lib/supabase';
 import { customerFilterSchema, type CustomerFilterSchema } from '@/schemas/customers';
 
 export const Route = createFileRoute('/admin/customers')({
+  beforeLoad: async () => {
+    const { data } = await adminSupabaseClient.auth.getSession();
+    if (!data.session || data.session.user.app_metadata.role !== 'admin')
+      return redirect({ to: '/admin/login' });
+  },
   component: RouteComponent,
   validateSearch: customerFilterSchema.parse,
 });

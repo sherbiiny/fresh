@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 import { Search } from 'lucide-react';
 
 import { getOrdersQuery } from '@/api/dashboard/queries';
@@ -12,9 +12,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { adminSupabaseClient } from '@/lib/supabase';
 import { orderFilterSchema, type OrderFilterSchema } from '@/schemas/orders';
 
 export const Route = createFileRoute('/admin/orders')({
+  beforeLoad: async () => {
+    const { data } = await adminSupabaseClient.auth.getSession();
+    if (!data.session || data.session.user.app_metadata.role !== 'admin')
+      return redirect({ to: '/admin/login' });
+  },
   component: RouteComponent,
   validateSearch: orderFilterSchema.parse,
 });

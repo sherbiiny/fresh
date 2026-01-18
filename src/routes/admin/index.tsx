@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
 import { getDashboardStatsQuery } from '@/api/dashboard/queries';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,8 +12,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { adminSupabaseClient } from '@/lib/supabase';
 
-export const Route = createFileRoute('/admin/')({ component: RouteComponent });
+export const Route = createFileRoute('/admin/')({
+  beforeLoad: async () => {
+    const { data } = await adminSupabaseClient.auth.getSession();
+    if (!data.session || data.session.user.app_metadata.role !== 'admin')
+      return redirect({ to: '/admin/login' });
+  },
+  component: RouteComponent,
+});
 
 function RouteComponent() {
   const { data: stats, isLoading } = useQuery(getDashboardStatsQuery());
