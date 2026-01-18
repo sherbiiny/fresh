@@ -1,19 +1,33 @@
+import { useMutation } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 
+import { createOrderMutation } from '@/api/store/mutations';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Spinner } from '@/components/ui/spinner';
+import { useAuthStore } from '@/storage/auth';
 import { useCart } from '@/storage/cart';
 
 export const Route = createFileRoute('/_store/cart')({ component: RouteComponent });
 
 function RouteComponent() {
   const navigate = useNavigate();
-  const { cart, removeItem, updateItemAmount } = useCart();
-
+  const { cart, removeItem, updateItemAmount, clearCart } = useCart();
+  const { user } = useAuthStore();
   const total = cart.items.reduce((sum, item) => sum + item.price * item.amount, 0);
+
+  const { mutate: placeOrder, isPending } = useMutation({
+    ...createOrderMutation(),
+    onSuccess: () => {
+      clearCart();
+      toast.success('Order placed successfully');
+      navigate({ to: '/' });
+    },
+  });
 
   if (cart.items.length === 0) {
     return (
@@ -158,9 +172,19 @@ function RouteComponent() {
                 <span>Total</span>
                 <span>${total.toFixed(2)}</span>
               </div>
-              <Button className="w-full" size="lg">
-                Place Order
-              </Button>
+              {user ? (
+                <Button
+                  className="w-full"
+                  size="lg"
+                  onClick={() => placeOrder({ cart, customerId: user.id })}
+                >
+                  {isPending ? <Spinner /> : 'Place Order'}
+                </Button>
+              ) : (
+                <Button className="w-full" size="lg" onClick={() => navigate({ to: '/login' })}>
+                  Login to Place Order
+                </Button>
+              )}
               <Button
                 variant="outline"
                 className="w-full mt-2"

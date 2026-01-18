@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import { storeSupabaseClient } from '@/lib/supabase';
 
 import type { LoginSchema, RegisterSchema } from '@/schemas/auth';
+import type { Cart } from '@/types';
 
 const handleError = (error: Error) => {
   toast.error(error.message);
@@ -38,6 +39,27 @@ export const registerMutation = () => {
       return data.user;
     },
 
+    onError: handleError,
+  });
+};
+
+export const createOrderMutation = () => {
+  return mutationOptions({
+    mutationFn: async ({ cart, customerId }: { cart: Cart; customerId: string }) => {
+      const items = cart.items.map(item => ({
+        productId: item.product.id,
+        quantity: item.amount,
+        price: item.price,
+      }));
+
+      const { data, error } = await storeSupabaseClient.rpc('create_order_with_items', {
+        p_customer_id: customerId,
+        p_items: items,
+      });
+
+      if (error) throw error;
+      return data;
+    },
     onError: handleError,
   });
 };

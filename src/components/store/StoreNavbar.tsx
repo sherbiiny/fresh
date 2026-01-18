@@ -29,7 +29,7 @@ export function StoreNavbar() {
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    navigate({ to: '/', search: { search: e.target.value } });
+    navigate({ to: '/', search: { search: e.target.value }, replace: true });
   };
 
   return (
