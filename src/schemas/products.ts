@@ -17,6 +17,7 @@ export const addProductSchema = z.object({
 export const productFilterSchema = z.object({
   search: z.string().optional(),
   category: z.union([z.enum(['fruit', 'vegetable']), z.literal('all')]).optional(),
+  sort: z.union([z.enum(['price-low', 'price-high']), z.literal('default')]).optional(),
 });
 
 export type AddProductSchema = z.infer<typeof addProductSchema>;

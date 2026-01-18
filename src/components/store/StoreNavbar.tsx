@@ -1,6 +1,4 @@
-import { useState } from 'react';
-
-import { useNavigate } from '@tanstack/react-router';
+import { Link, useNavigate, useSearch } from '@tanstack/react-router';
 import { Search, User as UserIcon, LogOut, ShoppingBag, ShoppingCart } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -20,7 +18,7 @@ import { useCart } from '@/storage/cart';
 export function StoreNavbar() {
   const navigate = useNavigate();
   const { user, clearUser } = useAuthStore();
-  const [searchQuery, setSearchQuery] = useState('');
+  const { search } = useSearch({ from: '/_store' });
   const { cart } = useCart();
 
   const handleLogout = async () => {
@@ -29,38 +27,34 @@ export function StoreNavbar() {
     navigate({ to: '/' });
   };
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      // TODO: Navigate to search results page
-      console.log('Search:', searchQuery);
-    }
+    navigate({ to: '/', search: { search: e.target.value } });
   };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background px-4">
       <div className="container mx-auto flex h-14 items-center justify-between gap-6">
         {/* Logo/Brand */}
-        <div className="flex items-center gap-2.5">
+        <Link to="/" className="flex items-center gap-2.5">
           <div className="flex items-center justify-center size-8 rounded-md bg-primary/10 text-primary">
             <img src="/appicon.png" alt="Fresh Store" className="h-6 w-6" />
           </div>
           <span className="text-lg font-semibold tracking-tight">Fresh Store</span>
-        </div>
-
+        </Link>
         {/* Search Bar */}
-        <form onSubmit={handleSearch} className="flex-1 max-w-xl mx-8">
+        <div className="flex-1 max-w-xl mx-8">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
             <Input
               type="search"
               placeholder="Search products..."
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
+              value={search || ''}
+              onChange={handleSearch}
               className="pl-9 pr-4 h-9 w-full bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-ring"
             />
           </div>
-        </form>
+        </div>
 
         {/* Auth Section */}
         <div className="flex items-center gap-2">

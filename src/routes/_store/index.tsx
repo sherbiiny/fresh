@@ -7,18 +7,39 @@ import { getProductsQuery } from '@/api/store/queries';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
+import { productFilterSchema, type ProductFilterSchema } from '@/schemas/products';
 import { useCart } from '@/storage/cart';
 
 import type { Product } from '@/types';
 
-export const Route = createFileRoute('/_store/')({ component: RouteComponent });
+export const Route = createFileRoute('/_store/')({
+  component: RouteComponent,
+  validateSearch: productFilterSchema.parse,
+});
+
+const categories = [
+  { value: 'all', name: 'All' },
+  { value: 'fruit', name: 'Fruit' },
+  { value: 'vegetable', name: 'Vegetable' },
+];
+const sorts = [
+  { value: 'default', name: 'Default' },
+  { value: 'price-low', name: 'Price: Low to High' },
+  { value: 'price-high', name: 'Price: High to Low' },
+];
 
 function RouteComponent() {
-  const { data: products, isLoading } = useQuery({
-    ...getProductsQuery({ search: '', category: 'all' }),
-  });
-
+  const filterQuery = Route.useSearch();
+  const { data: products, isLoading } = useQuery(getProductsQuery(filterQuery));
+  const navigate = Route.useNavigate();
   const { addItem } = useCart();
 
   const handleAddItem = (product: Product) => {
@@ -26,10 +47,15 @@ function RouteComponent() {
     toast.success(`${product.title} added to cart`);
   };
 
+  const handleFilterChange = (filter: ProductFilterSchema) =>
+    navigate({ search: filter, replace: true });
+
   if (isLoading) {
     return (
       <div className="container mx-auto h-full py-4">
-        <h1 className="text-2xl font-bold mb-4">Products</h1>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-2xl font-bold">Products</h1>
+        </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
           {[...Array(8)].map((_, i) => (
             <Card key={i} className="py-3">
@@ -51,7 +77,9 @@ function RouteComponent() {
   if (!products || products.length === 0) {
     return (
       <div className="container mx-auto py-4">
-        <h1 className="text-2xl font-bold mb-4">Products</h1>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-2xl font-bold">Products</h1>
+        </div>
         <p className="text-sm text-muted-foreground">No products available.</p>
       </div>
     );
@@ -59,7 +87,53 @@ function RouteComponent() {
 
   return (
     <div className="container mx-auto py-4">
-      <h1 className="text-2xl font-bold mb-4">Products</h1>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-2xl font-bold">Products</h1>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3">
+            <Select
+              defaultValue="all"
+              onValueChange={value =>
+                handleFilterChange({
+                  ...filterQuery,
+                  category: value as 'all' | 'fruit' | 'vegetable',
+                })
+              }
+            >
+              <SelectTrigger className="w-[140px]">
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map(category => (
+                  <SelectItem key={category.value} value={category.value}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select
+              defaultValue="default"
+              onValueChange={value =>
+                handleFilterChange({
+                  ...filterQuery,
+                  sort: value as 'default' | 'price-low' | 'price-high',
+                })
+              }
+            >
+              <SelectTrigger className="w-[160px]">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                {sorts.map(sort => (
+                  <SelectItem key={sort.value} value={sort.value}>
+                    {sort.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </div>
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
         {products.map(product => {
           const isFruit = product.category === 'fruit';
