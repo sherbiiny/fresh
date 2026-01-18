@@ -7,7 +7,7 @@ import { CustomersTable } from '@/components/dashboard/customers/CustomersTable'
 import { Input } from '@/components/ui/input';
 import { customerFilterSchema, type CustomerFilterSchema } from '@/schemas/customers';
 
-export const Route = createFileRoute('/admin/users')({
+export const Route = createFileRoute('/admin/customers')({
   component: RouteComponent,
   validateSearch: customerFilterSchema.parse,
 });

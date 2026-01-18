@@ -8,7 +8,7 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 const getPageTitle = (pathname: string): string => {
   if (pathname === '/admin' || pathname === '/admin/') return 'Dashboard';
   if (pathname.startsWith('/admin/products')) return 'Products';
-  if (pathname.startsWith('/admin/users')) return 'Users';
+  if (pathname.startsWith('/admin/customers')) return 'Customers';
   if (pathname.startsWith('/admin/orders')) return 'Orders';
   return 'Dashboard';
 };

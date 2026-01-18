@@ -17,16 +17,28 @@ export type Product = {
   createdAt: string;
 };
 
+export type OrderItem = {
+  id: number;
+  productId: number;
+  quantity: number;
+  price: number;
+  createdAt: string;
+  product: {
+    id: number;
+    title: string;
+    image: string | null;
+    category: 'fruit' | 'vegetable';
+  };
+};
+
 export type Order = {
   id: number;
   customerId: string;
   status: 'pending' | 'completed' | 'cancelled';
   total: number;
   createdAt: string;
-  customer?: {
-    name: string;
-    email: string;
-  };
+  orderItems: OrderItem[];
+  customer: Customer;
 };
 
 export type BestCustomer = Omit<Customer, 'createdAt'> & {

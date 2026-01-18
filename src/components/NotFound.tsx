@@ -8,7 +8,7 @@ export function NotFound({ basePath }: { basePath: string }) {
   const handleGoBack = () => window.history.back();
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
+    <div className="flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="mx-auto mb-4 text-6xl font-bold text-muted-foreground">404</div>

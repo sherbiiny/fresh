@@ -18,8 +18,8 @@ export function CustomersTable({ customers, isLoadingCustomers }: CustomersTable
         const name = row.getValue('name') as string;
 
         return (
-          <div className="w-10 h-10 overflow-hidden rounded-full">
-            <img src={avatar as string} alt={name} className="w-full h-full object-cover" />
+          <div className="w-10 h-10 p-1 overflow-hidden rounded-full">
+            <img src={avatar as string} alt={name} className="w-full h-full object-contain" />
           </div>
         );
       },

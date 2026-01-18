@@ -34,8 +34,8 @@ const sidebarItems = [
   },
   {
     icon: UsersIcon,
-    label: 'Users',
-    href: '/admin/users',
+    label: 'Customers',
+    href: '/admin/customers',
   },
   {
     icon: PackageIcon,

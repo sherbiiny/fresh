@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { createFileRoute, Link, redirect, useNavigate } from '@tanstack/react-router';
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
 import { Eye, EyeOff } from 'lucide-react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -124,10 +124,7 @@ function RouteComponent() {
           </CardContent>
           <CardFooter className="flex flex-col gap-2 border-t pt-4">
             <div className="text-center text-sm text-muted-foreground">
-              Don't have an account?{' '}
-              <Link to="/admin/register" className="text-primary font-medium hover:underline">
-                Register
-              </Link>
+              Need help? Contact your system administrator
             </div>
           </CardFooter>
         </Card>
