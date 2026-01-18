@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { Search } from 'lucide-react';
 
-import { getOrdersQuery } from '@/api/queries';
+import { getOrdersQuery } from '@/api/dashboard/queries';
 import { OrdersTable } from '@/components/dashboard/orders/OrdersTable';
 import { Input } from '@/components/ui/input';
 import {

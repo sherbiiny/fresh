@@ -13,16 +13,16 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { ThemeSwitch } from '@/components/ui/theme-switch';
-import { userSupabaseClient } from '@/lib/supabase';
+import { storeSupabaseClient } from '@/lib/supabase';
 import { useAuthStore } from '@/storage/auth';
 
-export function CustomerNavbar() {
+export function StoreNavbar() {
   const navigate = useNavigate();
   const { user, clearUser } = useAuthStore();
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleLogout = async () => {
-    await userSupabaseClient.auth.signOut();
+    await storeSupabaseClient.auth.signOut();
     clearUser();
     navigate({ to: '/' });
   };

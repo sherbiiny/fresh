@@ -4,8 +4,8 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { Plus, Search } from 'lucide-react';
 
-import { deleteProductMutation } from '@/api/mutations';
-import { getProductsQuery } from '@/api/queries';
+import { deleteProductMutation } from '@/api/dashboard/mutations';
+import { getProductsQuery } from '@/api/dashboard/queries';
 import { AddProductModal } from '@/components/dashboard/products/AddProductModal';
 import { ProductsTable } from '@/components/dashboard/products/ProductsTable';
 import { UpdateProductModal } from '@/components/dashboard/products/UpdateProductModal';

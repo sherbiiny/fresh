@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import { updateProductMutation } from '@/api/mutations';
+import { updateProductMutation } from '@/api/dashboard/mutations';
 import { queryClient } from '@/api/queryClient';
 import { Button } from '@/components/ui/button';
 import {

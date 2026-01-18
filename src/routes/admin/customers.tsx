@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { Search } from 'lucide-react';
 
-import { getCustomersQuery } from '@/api/queries';
+import { getCustomersQuery } from '@/api/dashboard/queries';
 import { CustomersTable } from '@/components/dashboard/customers/CustomersTable';
 import { Input } from '@/components/ui/input';
 import { customerFilterSchema, type CustomerFilterSchema } from '@/schemas/customers';

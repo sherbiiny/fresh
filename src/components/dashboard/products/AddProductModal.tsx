@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import { addProductMutation } from '@/api/mutations';
+import { addProductMutation } from '@/api/dashboard/mutations';
 import { queryClient } from '@/api/queryClient';
 import { Button } from '@/components/ui/button';
 import {

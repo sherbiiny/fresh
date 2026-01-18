@@ -3,10 +3,15 @@ import { toast } from 'sonner';
 
 import { adminSupabaseClient } from '@/lib/supabase';
 
-import { queryClient } from './queryClient';
+import { queryClient } from '../queryClient';
 
 import type { LoginSchema } from '@/schemas/auth';
 import type { AddProductSchema } from '@/schemas/products';
+
+const handleError = (error: Error) => {
+  toast.error(error.message);
+  console.error(error);
+};
 
 export const loginAdminMutation = () => {
   return mutationOptions({
@@ -22,10 +27,7 @@ export const loginAdminMutation = () => {
       return data.user;
     },
 
-    onError: (error: Error) => {
-      toast.error(error.message);
-      console.error(error);
-    },
+    onError: handleError,
   });
 };
 
@@ -37,10 +39,7 @@ export const addProductMutation = () => {
       return data;
     },
 
-    onError: (error: Error) => {
-      toast.error(error.message);
-      console.error(error);
-    },
+    onError: handleError,
   });
 };
 
@@ -55,11 +54,7 @@ export const updateProductMutation = () => {
       return data;
     },
 
-    onError: (error: Error) => {
-      toast.error(error.message);
-      console.error(error);
-    },
-
+    onError: handleError,
     onSuccess: () => {
       toast.success('Product updated successfully');
       queryClient.invalidateQueries({ queryKey: ['products'] });
@@ -78,10 +73,7 @@ export const deleteProductMutation = () => {
       return data;
     },
 
-    onError: (error: Error) => {
-      toast.error(error.message);
-      console.error(error);
-    },
+    onError: handleError,
 
     onSuccess: () => {
       toast.success('Product deleted successfully');
