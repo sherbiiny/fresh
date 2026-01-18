@@ -3,6 +3,8 @@ import { toast } from 'sonner';
 
 import { adminSupabaseClient } from '@/lib/supabase';
 
+  import { queryClient } from './queryClient';
+
 import type { LoginSchema } from '@/schemas/auth';
 import type { AddProductSchema } from '@/schemas/products';
 
@@ -38,6 +40,49 @@ export const addProductMutation = () => {
     onError: (error: Error) => {
       toast.error(error.message);
       console.error(error);
+    },
+  });
+};
+
+export const updateProductMutation = () => {
+  return mutationOptions({
+    mutationFn: async ({ id, ...product }: AddProductSchema & { id: number }) => {
+      const { data, error } = await adminSupabaseClient
+        .from('products')
+        .update(product)
+        .eq('id', id);
+      if (error) throw error;
+      return data;
+    },
+
+    onError: (error: Error) => {
+      toast.error(error.message);
+      console.error(error);
+    },
+
+    onSuccess: () => {
+      toast.success('Product updated successfully');
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+    },
+  });
+};
+
+export const deleteProductMutation = () => {
+  return mutationOptions({
+    mutationFn: async (productId: number) => {
+      const { data, error } = await adminSupabaseClient.from('products').delete().eq('id', productId);
+      if (error) throw error;
+      return data;
+    },
+
+    onError: (error: Error) => {
+      toast.error(error.message);
+      console.error(error);
+    },
+
+    onSuccess: () => {
+      toast.success('Product deleted successfully');
+      queryClient.invalidateQueries({ queryKey: ['products'] });
     },
   });
 };

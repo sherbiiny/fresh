@@ -7,8 +7,8 @@ export type Customer = {
 };
 
 export type Product = {
-  id: string;
-  name: string;
+  id: number;
+  title: string;
   description: string;
   price: number;
   quantity: number;

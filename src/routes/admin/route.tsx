@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 
 import { createFileRoute, Outlet, useLocation } from '@tanstack/react-router';
 
+import { DashboardNavbar } from '@/components/dashboard/DashboardNavbar';
 import { DashboardSidebar } from '@/components/dashboard/DashboardSidebar';
 import { NotFound } from '@/components/NotFound';
 import { LoadingOverlay } from '@/components/ui/loading-overlay';
-import { SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarInset } from '@/components/ui/sidebar';
 import { adminSupabaseClient } from '@/lib/supabase';
 import { useAuthStore } from '@/storage/auth';
 
@@ -30,11 +31,19 @@ function RouteComponent() {
     checkSession();
   }, [setAdmin]);
 
+  if (isLoginPage) {
+    return ready ? <Outlet /> : <LoadingOverlay />;
+  }
+
   return (
-    <div className="flex min-h-svh w-full">
-      {!isLoginPage && <DashboardSidebar />}
-      {!isLoginPage && <SidebarTrigger />}
-      <main className="flex-1 p-8">{ready ? <Outlet /> : <LoadingOverlay />}</main>
-    </div>
+    <>
+      <DashboardSidebar />
+      <SidebarInset>
+        <DashboardNavbar />
+        <div className="flex-1 px-4 md:px-6 lg:px-8 py-6">
+          {ready ? <Outlet /> : <LoadingOverlay />}
+        </div>
+      </SidebarInset>
+    </>
   );
 }
