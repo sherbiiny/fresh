@@ -1,9 +1,7 @@
 import { useLocation } from '@tanstack/react-router';
-import { Moon, Sun } from 'lucide-react';
 
-import { useTheme } from '@/components/theme-provider';
-import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { ThemeSwitch } from '@/components/ui/theme-switch';
 
 const getPageTitle = (pathname: string): string => {
   if (pathname === '/admin' || pathname === '/admin/') return 'Dashboard';
@@ -15,16 +13,6 @@ const getPageTitle = (pathname: string): string => {
 
 export function DashboardNavbar() {
   const location = useLocation();
-  const { theme, setTheme } = useTheme();
-
-  const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
-  };
-
-  const getThemeIcon = () => {
-    return theme === 'light' ? <Sun className="size-4" /> : <Moon className="size-4" />;
-  };
-
   const pageTitle = getPageTitle(location.pathname);
 
   return (
@@ -34,15 +22,7 @@ export function DashboardNavbar() {
         <div className="flex flex-1 items-center">
           <h1 className="text-base font-semibold">{pageTitle}</h1>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={toggleTheme}
-          className="h-9 w-9"
-          aria-label="Toggle theme"
-        >
-          {getThemeIcon()}
-        </Button>
+        <ThemeSwitch />
       </div>
     </header>
   );
