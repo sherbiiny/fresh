@@ -18,6 +18,8 @@ import {
 } from '@/components/ui/dialog';
 import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
 import { addProductSchema, type AddProductSchema } from '@/schemas/products';
@@ -37,6 +39,7 @@ export function UpdateProductModal({ setEditingProduct, editingProduct }: Update
       description: '',
       price: 0,
       quantity: 0,
+      category: 'fruit',
       image: '',
     },
   });
@@ -48,6 +51,7 @@ export function UpdateProductModal({ setEditingProduct, editingProduct }: Update
         description: editingProduct.description,
         price: editingProduct.price,
         quantity: editingProduct.quantity,
+        category: editingProduct.category,
         image: editingProduct.image || '',
       });
     }
@@ -114,6 +118,41 @@ export function UpdateProductModal({ setEditingProduct, editingProduct }: Update
                         required
                         rows={6}
                       />
+                      {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                    </>
+                  )}
+                />
+              </FieldContent>
+            </Field>
+
+            <Field>
+              <FieldLabel>
+                Category <span className="text-destructive">*</span>
+              </FieldLabel>
+              <FieldContent>
+                <Controller
+                  control={form.control}
+                  name="category"
+                  render={({ field, fieldState }) => (
+                    <>
+                      <RadioGroup
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        className="flex gap-4"
+                      >
+                        <div className="flex items-center gap-2">
+                          <RadioGroupItem value="fruit" id="category-fruit" />
+                          <Label htmlFor="category-fruit" className="cursor-pointer">
+                            Fruit
+                          </Label>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <RadioGroupItem value="vegetable" id="category-vegetable" />
+                          <Label htmlFor="category-vegetable" className="cursor-pointer">
+                            Vegetable
+                          </Label>
+                        </div>
+                      </RadioGroup>
                       {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                     </>
                   )}

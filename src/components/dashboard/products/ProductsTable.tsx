@@ -1,5 +1,6 @@
 import { Edit, Trash } from 'lucide-react';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
 import { DataTable } from '../DataTable';
@@ -58,6 +59,26 @@ export function ProductsTable({
           <div className="max-w-[300px] truncate text-muted-foreground" title={description}>
             {description}
           </div>
+        );
+      },
+    },
+    {
+      header: 'Category',
+      accessorKey: 'category',
+      cell: ({ row }) => {
+        const category = row.getValue('category') as string;
+        const isFruit = category === 'fruit';
+        return (
+          <Badge
+            variant="secondary"
+            className={`capitalize ${
+              isFruit
+                ? 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-800'
+                : 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800'
+            }`}
+          >
+            {category}
+          </Badge>
         );
       },
     },

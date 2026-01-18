@@ -10,6 +10,7 @@ export type Product = {
   id: number;
   title: string;
   description: string;
+  category: 'fruit' | 'vegetable';
   price: number;
   quantity: number;
   image: string | null;
