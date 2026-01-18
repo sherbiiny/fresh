@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 
 import { createFileRoute, Outlet, useLocation } from '@tanstack/react-router';
 
-import { StoreNavbar } from '@/components/store/StoreNavbar';
 import { LoadingOverlay } from '@/components/ui/loading-overlay';
 import { storeSupabaseClient } from '@/lib/supabase';
 import { useAuthStore } from '@/storage/auth';
+
+import { StoreNavbar } from '@/components/store/StoreNavbar';
 
 export const Route = createFileRoute('/_store')({
   component: RouteComponent,

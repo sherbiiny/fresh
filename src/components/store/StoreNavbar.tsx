@@ -15,11 +15,13 @@ import { Input } from '@/components/ui/input';
 import { ThemeSwitch } from '@/components/ui/theme-switch';
 import { storeSupabaseClient } from '@/lib/supabase';
 import { useAuthStore } from '@/storage/auth';
+import { useCart } from '@/storage/cart';
 
 export function StoreNavbar() {
   const navigate = useNavigate();
   const { user, clearUser } = useAuthStore();
   const [searchQuery, setSearchQuery] = useState('');
+  const { cart } = useCart();
 
   const handleLogout = async () => {
     await storeSupabaseClient.auth.signOut();
@@ -36,7 +38,7 @@ export function StoreNavbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background">
+    <header className="sticky top-0 z-50 w-full border-b bg-background px-4">
       <div className="container mx-auto flex h-14 items-center justify-between gap-6">
         {/* Logo/Brand */}
         <div className="flex items-center gap-2.5">
@@ -71,7 +73,9 @@ export function StoreNavbar() {
             aria-label="Shopping cart"
           >
             <ShoppingCart className="size-5" />
-            {/* TODO: Add badge with cart item count */}
+            <span className="absolute -top-1 right-0 bg-red-500 text-white w-4 h-4 flex items-center justify-center rounded-full text-[0.6rem]">
+              {cart.items.length}
+            </span>
           </Button>
           {user ? (
             <DropdownMenu>

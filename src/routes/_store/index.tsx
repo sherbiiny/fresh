@@ -1,12 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { ShoppingCart } from 'lucide-react';
+import { toast } from 'sonner';
 
 import { getProductsQuery } from '@/api/store/queries';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useCart } from '@/storage/cart';
+
+import type { Product } from '@/types';
 
 export const Route = createFileRoute('/_store/')({ component: RouteComponent });
 
@@ -15,12 +19,19 @@ function RouteComponent() {
     ...getProductsQuery({ search: '', category: 'all' }),
   });
 
+  const { addItem } = useCart();
+
+  const handleAddItem = (product: Product) => {
+    addItem(product);
+    toast.success(`${product.title} added to cart`);
+  };
+
   if (isLoading) {
     return (
-      <div className="container mx-auto py-4">
+      <div className="container mx-auto h-full py-4">
         <h1 className="text-2xl font-bold mb-4">Products</h1>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-          {Array(8).map((_, i) => (
+          {[...Array(8)].map((_, i) => (
             <Card key={i} className="py-3">
               <CardHeader className="px-3 pb-2">
                 <Skeleton className="w-full h-52 mb-2" />
@@ -83,7 +94,7 @@ function RouteComponent() {
                   </Badge>
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-semibold">${product.price.toFixed(2)}</span>
-                    <Button size="icon-sm" variant="outline" onClick={() => {}}>
+                    <Button size="icon-sm" variant="outline" onClick={() => handleAddItem(product)}>
                       <ShoppingCart className="size-4" />
                     </Button>
                   </div>

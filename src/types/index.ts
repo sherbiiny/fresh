@@ -53,3 +53,13 @@ export type DashboardStats = {
   bestCustomers: BestCustomer[];
   recentPendingOrders: Order[];
 };
+
+export type CartItem = {
+  product: Product;
+  amount: number;
+  price: number;
+};
+
+export type Cart = {
+  items: CartItem[];
+};

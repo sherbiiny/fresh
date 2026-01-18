@@ -27,6 +27,14 @@ export const registerMutation = () => {
     mutationFn: async (registerData: RegisterSchema) => {
       const { data, error } = await storeSupabaseClient.auth.signUp(registerData);
       if (error) throw error;
+
+      const { error: customerError } = await storeSupabaseClient.from('customers').insert({
+        id: data.user?.id,
+        name: registerData.name,
+        email: registerData.email,
+      });
+
+      if (customerError) throw customerError;
       return data.user;
     },
 
