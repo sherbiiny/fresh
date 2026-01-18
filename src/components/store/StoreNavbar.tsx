@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { useNavigate } from '@tanstack/react-router';
-import { Search, User as UserIcon, LogOut, ShoppingBag } from 'lucide-react';
+import { Search, User as UserIcon, LogOut, ShoppingBag, ShoppingCart } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -37,11 +37,11 @@ export function StoreNavbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
-      <div className="container mx-auto flex h-14 items-center justify-between gap-6 px-6">
+      <div className="container mx-auto flex h-14 items-center justify-between gap-6">
         {/* Logo/Brand */}
         <div className="flex items-center gap-2.5">
-          <div className="flex items-center justify-center size-8 rounded-md bg-primary text-primary-foreground">
-            <ShoppingBag className="size-4" />
+          <div className="flex items-center justify-center size-8 rounded-md bg-primary/10 text-primary">
+            <img src="/appicon.png" alt="Fresh Store" className="h-6 w-6" />
           </div>
           <span className="text-lg font-semibold tracking-tight">Fresh Store</span>
         </div>
@@ -63,6 +63,16 @@ export function StoreNavbar() {
         {/* Auth Section */}
         <div className="flex items-center gap-2">
           <ThemeSwitch />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate({ to: '/cart' })}
+            className="h-9 w-9 relative"
+            aria-label="Shopping cart"
+          >
+            <ShoppingCart className="size-5" />
+            {/* TODO: Add badge with cart item count */}
+          </Button>
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
