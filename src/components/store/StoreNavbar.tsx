@@ -67,9 +67,11 @@ export function StoreNavbar() {
             aria-label="Shopping cart"
           >
             <ShoppingCart className="size-5" />
-            <span className="absolute -top-1 right-0 bg-red-500 text-white w-4 h-4 flex items-center justify-center rounded-full text-[0.6rem]">
-              {cart.items.length}
-            </span>
+            {cart.items.length > 0 && (
+              <span className="absolute -top-1 right-0 bg-red-500 text-white w-4 h-4 flex items-center justify-center rounded-full text-[0.6rem]">
+                {cart.items.length}
+              </span>
+            )}
           </Button>
           {user ? (
             <DropdownMenu>
